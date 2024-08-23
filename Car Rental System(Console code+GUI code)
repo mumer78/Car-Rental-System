@@ -1,0 +1,1047 @@
+# firstly we r importing library tkinter
+import tkinter as tk
+from tkinter import scrolledtext
+# these are the variables
+quantity_car_1 = 10
+quantity_car_2 = 7
+quantity_car_3 = 5
+total_cost = 0
+car = ""
+tax = ""
+day = ""
+income = ""
+table_insurance = ""
+ind_cost = ""
+ind_quantity = ""
+total_tax = 0
+total_insurance = 0
+
+# destroying all widgets when the car rental button is press
+def destroy_return_labels():
+    for widget in window.winfo_children():
+        if widget not in [rental_button, return_car_button, total_billings_button]:
+            widget.destroy()
+
+# function when which runs when the car rental button is press
+def car_rental():
+# calling destroy_return_labels()
+    destroy_return_labels()
+# all labels and entries
+    rental_order_label = tk.Label(window,
+                                  text="\n\n\n                                    Rental Order                                   \n"
+                                       "                          ------------------------------------------------------------------------------------------------------------------------------------------                          \n"
+                                       "                                                         Car Type                   R.C                       L.I                                 C.I                              Quantity                                                         \n"
+                                       f"        1-Cultus                    $25                        $5                                $10                                 {quantity_car_1}               \n"
+                                       f"2-Sportage                $40                       $10                              $15                                  {quantity_car_2}        \n"
+                                       f"3-Audi                         $65                       $20                              $25                                  {quantity_car_3}        \n"
+                                       "                        ------------------------------------------------------------------------------------------------------------------------------------------------                          \n"
+                                       "                                                                                                                                                \n"
+                                       "                                                                                                                                                  ")
+    rental_order_label.configure(bg="white",fg="black", width=70, height=7,font=("Arial",9), bd=4, relief=tk.GROOVE)
+    rental_order_label.grid(row=1, column=0, padx=140, columnspan=6,pady=51, rowspan=5,sticky="w")
+    
+
+
+    car_type_label = tk.Label(window, text="Enter Car type (1-3):", font=("Consolas", 12),bg="gold")
+    car_type_label.grid(row=6, column=0, padx=140, pady=5, sticky="w")
+    car_type_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    car_type_entry.grid(row=6, column=0, padx=335, pady=5, sticky="w")
+
+    days_label = tk.Label(window, text="Days:", font=("Consolas", 12),bg="gold")
+    days_label.grid(row=7, column=0, padx=140, pady=5, sticky="w")
+    days_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    days_entry.grid(row=7, column=0, padx=190, pady=5, sticky="w")
+
+    quantity_label = tk.Label(window, text="Quantity:", font=("Consolas", 12),bg="gold")
+    quantity_label.grid(row=8, column=0, padx=140, pady=5, sticky="w")
+    quantity_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    quantity_entry.grid(row=8, column=0, padx=225, pady=5, sticky="w")
+
+    insurance_label = tk.Label(window, text="\"L\" for Liability or \"F\" for Comprehensive Insurance:",bg="gold", font=("Consolas", 12))
+    insurance_label.grid(row=9, column=0, padx=140, pady=5, sticky="w")
+    insurance_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    insurance_entry.grid(row=9, column=0, padx=625, pady=5, sticky="w")
+
+
+# function when calculate button is pressed for results and calculation
+    def cars_rental_calculation():
+
+# logic
+
+        if car_type_entry.get() == "" or days_entry.get() == "" or quantity_entry.get() == "" or insurance_entry.get() == "" :
+            null_label = tk.Label(window, text="\u26A0 Empty Entry Error",
+                                           font=("Consolas", 12),
+                                           bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+        elif car_type_entry.get() == "" and days_entry.get() == "" and quantity_entry.get() == "" and insurance_entry.get() == "" :
+            null_label = tk.Label(window, text="\u26A0 Empty Entry Error",
+                                  font=("Consolas", 12),
+                                  bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+        elif not car_type_entry.get().isdigit():
+            null_label = tk.Label(window, text="\u26A0 Car must be in Number",
+                                  font=("Consolas", 12),
+                                  bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+        elif not quantity_entry.get().isdigit():
+            null_label = tk.Label(window, text="\u26A0 Quantity must be in Number",
+                                  font=("Consolas", 12),
+                                  bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+        elif insurance_entry.get().isdigit():
+            null_label = tk.Label(window, text="\u26A0 Insurance must be in Alphabet",
+                                  font=("Consolas", 12),
+                                  bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+        elif not days_entry.get().isdigit():
+            null_label = tk.Label(window, text="\u26A0 Days must be in Number",
+                                  font=("Consolas", 12),
+                                  bg="gold", fg="red")
+            null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+
+        else :
+
+            car_type = int(car_type_entry.get())
+            quantity = int(quantity_entry.get())
+            if car_type == 1:
+                if quantity <= quantity_car_1:
+                    tax1 = 0.05 * 25 * quantity * int(days_entry.get())
+                    if insurance_entry.get() == "l" or insurance_entry.get() == "L":
+                        y = 25 * quantity * int(days_entry.get()) + tax1 + 5
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12), bg="gold",
+                                                    fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day, income, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3,total_insurance,total_tax
+                            car_value = f"\nCultus"
+                            tax_value = f"\n{tax1}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n25"
+                            table_insurance_value = f"\n5 "
+                            total_cost += y
+                            ind_cost += (f"\n{y}")
+                            total_insurance+=5
+                            total_tax += tax1
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_1 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                        bg="gold",
+                                                        fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                            confirm_button.destroy()
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+
+                    elif insurance_entry.get() == "f" or insurance_entry.get() == "F":
+                        y = 25 * quantity * int(days_entry.get()) + tax1 + 10
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12),
+                                                    bg="gold", fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day, income,total_insurance,total_tax, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3
+                            car_value = f"\nCultus"
+                            tax_value = f"\n{tax1}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n25"
+                            table_insurance_value = f"\n10"
+                            ind_cost += (f"\n{y}")
+                            total_insurance += 10
+                            total_tax += tax1
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            total_cost += y
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_1 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                       bg="gold",
+                                                       fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                            confirm_button.destroy()
+
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+                    else:
+                        invalid_insur_label = tk.Label(window, text="\u26A0 Invalid insurance",
+                                                       font=("Consolas", 12),
+                                                       bg="gold", fg="red")
+                        invalid_insur_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+
+
+
+                else:
+                    sorry_label = tk.Label(window, text="\u26A0 Sorry dear! We have less quantity of this car",
+                                           font=("Consolas", 12),
+                                           bg="gold", fg="red")
+                    sorry_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+            elif car_type == 2:
+                if quantity <= quantity_car_2:
+                    tax2=0.05*40* quantity * int(days_entry.get())
+                    if insurance_entry.get() == "l" or insurance_entry.get() == "L":
+                        y = 40 * quantity * int(days_entry.get()) + tax2 + 10
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12),
+                                                    bg="gold", fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day, income,total_insurance,total_tax, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3
+                            car_value = f"\nSportage"
+                            tax_value = f"\n{tax2}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n40"
+                            table_insurance_value = f"\n10"
+                            total_cost += y
+                            ind_cost += (f"\n{y}")
+                            total_insurance += 10
+                            total_tax += tax2
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_2 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                       bg="gold",
+                                                       fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+                            confirm_button.destroy()
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+                    elif insurance_entry.get() == "F" or insurance_entry.get() == "f":
+                        y = 40 * quantity * int(days_entry.get()) + tax2 + 15
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12),
+                                                    bg="gold", fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day, income,total_insurance,total_tax, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3
+                            car_value = f"\nSportage"
+                            tax_value = f"\n{tax2}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n40"
+                            table_insurance_value = f"\n15"
+                            total_cost += y
+                            ind_cost += (f"\n{y}")
+                            total_insurance += 15
+                            total_tax += tax2
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_2 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                       bg="gold",
+                                                       fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                            confirm_button.destroy()
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+                    else:
+                        invalid_insur_label = tk.Label(window, text="\u26A0 Invalid insurance",
+                                                       font=("Consolas", 12),
+                                                       bg="gold", fg="red")
+                        invalid_insur_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+
+                else:
+                    sorry_label = tk.Label(window, text="\u26A0 Sorry dear! We have less quantity of this car",
+                                           font=("Consolas", 12),
+                                           bg="gold", fg="red")
+                    sorry_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+
+            elif car_type == 3:
+                if quantity <= quantity_car_3:
+                    tax3=0.05*65* quantity * int(days_entry.get())
+                    if insurance_entry.get() == "l" or insurance_entry.get() == "L":
+                        y = 65 * quantity * int(days_entry.get()) + tax3 + 20
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12),
+                                                    bg="gold", fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day,total_insurance,total_tax, income, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3
+                            car_value = f"\nAudii"
+                            tax_value = f"\n{tax3}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n65"
+                            table_insurance_value = f"\n20"
+                            total_cost += y
+                            ind_cost += (f"\n{y}")
+                            total_insurance += 20
+                            total_tax += tax3
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_3 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                       bg="gold",
+                                                       fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                            confirm_button.destroy()
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+                    elif insurance_entry.get() == "f" or insurance_entry.get() == "F":
+                        y = 65 * quantity * int(days_entry.get()) + tax3 + 25
+                        total_cost_label = tk.Label(window, text=f"Total Cost: ${y}", font=("Consolas", 12),
+                                                    bg="gold", fg="blue")
+                        total_cost_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        def updating():
+                            # setting variables as global
+                            global car, tax, day, income,total_insurance,total_tax, table_insurance, total_cost, ind_cost, ind_quantity, quantity_car_1, quantity_car_2, quantity_car_3
+                            car_value = f"\nAudii"
+                            tax_value = f"\n{tax3}"
+                            day_value = f"\n{days_entry.get()}"
+                            income_value = f"\n65"
+                            table_insurance_value = f"\n25"
+                            total_cost += y
+                            ind_cost += (f"\n{y}")
+                            total_insurance += 25
+                            total_tax += tax3
+
+                            # updating variables
+                            car += car_value
+                            tax += tax_value
+                            day += day_value
+                            income += income_value
+                            table_insurance += table_insurance_value
+                            ind_quantity += f"\n{quantity}"
+                            quantity_car_3 -= quantity
+                            confirmed_label = tk.Label(window, text=f"    Confirmed             ", font=("Consolas", 12),
+                                                       bg="gold",
+                                                       fg="blue")
+                            confirmed_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+                            confirm_button.destroy()
+
+
+                        # creating confirm button
+                        confirm_button = tk.Button(window, text="          confirm          ", command=updating,
+                                                     bg="green", fg="white", font=("Ink free", 15, "bold"),
+                                                     relief=tk.GROOVE)
+                        confirm_button.grid(row=13, column=0, columnspan=2, pady=2, padx=280, sticky="w")
+                        confirm_button.bind("<Enter>", lambda event, button=confirm_button: button.config(bg="red"))
+                        confirm_button.bind("<Leave>",
+                                              lambda event, button=confirm_button: button.config(bg="green"))
+                    else:
+                        invalid_insur_label = tk.Label(window, text="\u26A0 Invalid insurance",
+                                                       font=("Consolas", 12),
+                                                       bg="gold", fg="red")
+                        invalid_insur_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+
+                else:
+                    sorry_label = tk.Label(window, text="\u26A0 Sorry dear! We have less quantity of this car",
+                                           font=("Consolas", 12),
+                                           bg="gold", fg="red")
+                    sorry_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+            else:
+                sorry_label = tk.Label(window, text="\u26A0 Invalid Car", font=("Consolas", 12),
+                                       bg="gold", fg="red")
+                sorry_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+# function of destroying calculate button
+    def destroy_calbutton():
+            calculate_button.destroy()
+# function which runs when calculate_button button is pressed by the user
+    def destroy_calbutton_and_execute():
+                    cars_rental_calculation()
+                    destroy_calbutton()
+
+
+# creating calculate button
+    calculate_button = tk.Button(window, text="       Calculate       ", command=destroy_calbutton_and_execute,
+                                 bg="#001f3f", fg="white",font=("Ink free", 15, "bold"),relief=tk.GROOVE)
+    calculate_button.grid(row=13, column=0, columnspan=2, pady=65,padx=280,sticky="w")
+    calculate_button.bind("<Enter>", lambda event, button=calculate_button: button.config(bg="red"))
+    calculate_button.bind("<Leave>", lambda event, button=calculate_button: button.config(bg="#001f3f"))
+
+#########################################################################################################################################################################
+#########################################################################################################################################################################
+# destroying all widgets of previous window
+def destroy_rental_labels():
+    for widget in window.winfo_children():
+        if widget not in [rental_button, return_car_button, total_billings_button]:
+            widget.destroy()
+def return_car():
+    # calling destroy_rental_labels()
+    destroy_rental_labels()
+    # all labels and entries
+    return_car_label = tk.Label(window,
+                                text="\n\n\n                                    Return Order                                    \n"
+                                     "                          ------------------------------------------------------------------------------------------------------------------------------------------                          \n"
+                                     "                                                         Car Type                   R.C                       L.I                                 C.I                              Quantity                                                         \n"
+                                     f"        1-Cultus                    $25                        $5                                $10                                 {quantity_car_1}               \n"
+                                     f"2-Sportage                $40                       $10                              $15                                  {quantity_car_2}        \n"
+                                     f"3-Audi                         $65                       $20                              $25                                  {quantity_car_3}        \n"
+                                     "                        ------------------------------------------------------------------------------------------------------------------------------------------------                          \n"
+                                     "                                                                                                                                                \n"
+                                     "                                                                                                                                                  ")
+    return_car_label.configure(bg="white",fg="black", width=70, height=7,font=("Arial",9), bd=4, relief=tk.GROOVE)
+    return_car_label.grid(row=1, column=0, padx=140,pady=51, columnspan=6, rowspan=5,sticky="w")
+
+    car_type_label = tk.Label(window, text="Enter Car type (1-3):",bg="gold", font=("Consolas", 12))
+    car_type_label.grid(row=6, column=0, padx=140, pady=5, sticky="w")
+    car_type_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    car_type_entry.grid(row=6, column=0, padx=335, pady=5, sticky="w")
+
+    quantity_label = tk.Label(window, text="Enter Quantity:",bg="gold", font=("Consolas", 12))
+    quantity_label.grid(row=7, column=0, padx=140, pady=5, sticky="w")
+    quantity_entry = tk.Entry(window, font=("Consolas", 12),width=5)
+    quantity_entry.grid(row=7, column=0, padx=280, pady=5, sticky="w")
+
+
+# function which runs after return button is pressed by user
+    def return_label_and_return_button():
+
+# function when return button is pressed
+        def return_lable():
+#logic
+            if car_type_entry.get() == "" or quantity_entry.get() == "":
+                null_label = tk.Label(window, text="\u26A0 Empty Entry Error",
+                                      font=("Consolas", 12),
+                                      bg="gold", fg="red")
+                null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+            elif car_type_entry.get() == "" and quantity_entry.get() == "":
+                null_label = tk.Label(window, text="\u26A0 Empty Entry Error",
+                                      font=("Consolas", 12),
+                                      bg="gold", fg="red")
+                null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+            elif not car_type_entry.get().isdigit():
+                null_label = tk.Label(window, text="\u26A0 Car must be in Number",
+                                      font=("Consolas", 12),
+                                      bg="gold", fg="red")
+                null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+            elif not quantity_entry.get().isdigit():
+                null_label = tk.Label(window, text="\u26A0 Quantity must be in Number",
+                                      font=("Consolas", 12),
+                                      bg="gold", fg="red")
+                null_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+            else :
+                # setting variables as global
+                global quantity_car_1, quantity_car_2, quantity_car_3
+
+                car_type = int(car_type_entry.get())
+                quantity = int(quantity_entry.get())
+                if car_type == 1:
+                    if (quantity + quantity_car_1) <= 10:
+                        quantity_label = tk.Label(window,
+                                                  text="Car Returned",
+                                                  font=("Consolas", 12),
+                                                  bg="gold", fg="blue")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        quantity_car_1 += quantity
+                    else:
+                        quantity_label = tk.Label(window,
+                                                  text=f"\u26A0 {(quantity + quantity_car_1) - 10} quantity of this car hasn't been rented from our company.",
+                                                  font=("Consolas", 12),
+                                                  bg="gold", fg="red")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+                elif car_type == 2:
+                    if (quantity + quantity_car_2) <= 7:
+                        quantity_label = tk.Label(window,
+                                                  text="Car Returned",
+                                                  font=("Consolas", 12), bg="gold", fg="blue")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        quantity_car_2 += quantity
+
+                    else:
+                        quantity_label = tk.Label(window,
+                                                  text=f"\u26A0 {(quantity + quantity_car_2) - 7} quantity of this car hasn't been rented from our company.",
+                                                  font=("Consolas", 12),
+                                                  bg="gold", fg="red")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+                elif car_type == 3:
+                    if (quantity + quantity_car_3) <= 5:
+                        quantity_label = tk.Label(window, text="Car Returned",
+                                                  font=("Consolas", 12), bg="gold", fg="blue")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+                        quantity_car_3 += quantity
+
+                    else:
+                        quantity_label = tk.Label(window,
+                                                  text=f"\u26A0 {(quantity + quantity_car_3) - 5} quantity of this car hasn't been rented from our company.",
+                                                  font=("Consolas", 12),
+                                                  bg="gold", fg="red")
+                        quantity_label.grid(row=12, column=0, columnspan=2, pady=20, padx=190, sticky="w")
+
+                else:
+                    sorry_label = tk.Label(window, text="\u26A0 Invalid Car",
+                                           font=("Consolas", 12),
+                                           bg="gold", fg="red")
+                    sorry_label.grid(row=12, column=0, columnspan=2, pady=20, padx=310, sticky="w")
+
+
+# function to destroy return button
+        def destroy_button():
+          Return_button.destroy()
+
+        return_lable()
+        destroy_button()
+
+    # creating return button
+    Return_button = tk.Button(window, text="       Return       ", command=return_label_and_return_button, font=("Ink free", 15, "bold"),
+                                 bg="#001f3f", fg="white",relief=tk.GROOVE)
+    Return_button.grid(row=13, column=0, columnspan=2, pady=50,padx=300,sticky="w")
+    Return_button.bind("<Enter>", lambda event, button=Return_button: button.config(bg="red"))
+    Return_button.bind("<Leave>", lambda event, button=Return_button: button.config(bg="#001f3f"))
+###########################################################################################################################################################
+######################################################################################################################################
+# destroying widgets of previous window
+def destroy_all_labels():
+    for widget in window.winfo_children():
+        if widget not in [rental_button, return_car_button, total_billings_button]:
+            widget.destroy()
+def total_billings():
+    # calling destroy_all_labels()
+    destroy_all_labels()
+    # logic : we use split method to converting into list
+    cars = car.split('\n')
+    taxes = tax.split('\n')
+    incomes = income.split('\n')
+    days = day.split('\n')
+    insurances = table_insurance.split("\n")
+    indi_cost = ind_cost.split("\n")
+    indi_quantity = ind_quantity.split("\n")
+
+    billing_text = scrolledtext.ScrolledText(window, width=70, height=15, wrap=tk.WORD,bd=3)
+    billing_text.grid(row=1, column=0, padx=100, pady=50, columnspan=6, rowspan=5,sticky="w")
+
+    billing_text.insert(tk.END,"Car           $Tax      $Rent   Day   $Insurance   Quantity   $Cost\n")
+    billing_text.insert(tk.END,"----------------------------------------------------------------------\n")
+
+    for car_item, tax_item, income_item, day_item, insurance_item ,ind_cost_item , ind_quantity_item in zip(cars, taxes, incomes, days, insurances, indi_cost,indi_quantity):
+        car_length = len(car_item)
+        if car_length == 5 :
+            spacing = "   "
+        elif car_length == 6:
+            spacing = "  "
+        else :
+            spacing = ""
+
+        billing_text.insert(tk.END,f"{car_item}{spacing}       {tax_item}       {income_item}      {day_item}       {insurance_item}          {ind_quantity_item}       {ind_cost_item}\n")
+        billing_text.insert(tk.END, "----------------------------------------------------------------------\n")
+
+    billing_text.insert(tk.END, f"Total Cost : ${total_cost}"
+                                f"\nTotal insurance : ${total_insurance}"
+              f"\nTotal tax : ${total_tax}\n")
+    billing_text.insert(tk.END, "----------------------------------------------------------------------\n")
+
+    total_label = tk.Label(window, text="These are all Billings you have ever Done",
+                             font=("Consolas", 15, "bold"), fg="blue",bg="gold")
+    total_label.grid(row=6, column=0, padx=145, pady=1, sticky="w")
+
+
+
+
+# creating main window
+window = tk.Tk()
+window.title("TG Enterprises")
+window.geometry("800x570")
+window.configure(bg="gold")
+
+# making functions for first 3 buttons which are when the mouse enter or leave the buttons cause automatically color change
+def on_enter(event, button):
+    button.config(bg="red")
+
+def on_leave(event, button):
+    button.config(bg="#001f3f")
+
+# Creating first three buttons
+rental_button = tk.Button(window, text="Car Rental", fg="white", bg="#001f3f", font=("Ink free", 15, "bold"),
+                           command=car_rental, width=12, height=1, relief=tk.GROOVE,bd=3)
+rental_button.grid(row=0, column=0, sticky="w", padx=60, pady=20)
+rental_button.bind("<Enter>", lambda event, button=rental_button: on_enter(event, button))
+rental_button.bind("<Leave>", lambda event, button=rental_button: on_leave(event, button))
+
+return_car_button = tk.Button(window, text="Car Return", fg="white", bg="#001f3f", command=return_car,
+                              font=("Ink free", 15, "bold"),bd=3, width=12, height=1, relief=tk.GROOVE)
+return_car_button.grid(row=0, column=0, sticky="w", padx=320, pady=20)
+return_car_button.bind("<Enter>", lambda event, button=return_car_button: on_enter(event, button))
+return_car_button.bind("<Leave>", lambda event, button=return_car_button: on_leave(event, button))
+
+total_billings_button = tk.Button(window, text="Total Billing",bd=3, fg="white", command=total_billings, bg="#001f3f",
+                                  font=("Ink free", 15, "bold"), width=12, height=1, relief=tk.GROOVE)
+total_billings_button.grid(row=0, column=0, sticky="w", padx=580, pady=20)
+total_billings_button.bind("<Enter>", lambda event, button=total_billings_button: on_enter(event, button))
+total_billings_button.bind("<Leave>", lambda event, button=total_billings_button: on_leave(event, button))
+
+request_label = tk.Label(window,text="Hey! Welcome to TG Enterprises\n\nClick Your Desire Button",font=("Consolas", 22,"bold"), bg="gold",fg="blue")
+request_label.grid(row=7, column=0, padx=160 ,pady=150,sticky="w")
+
+# closing the window
+window.mainloop()
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+# Console based
+# setting variable
+quantity_car_1 = 10
+quantity_car_2 = 7
+quantity_car_3 = 5
+total_cost = 0
+car = ""
+tax = ""
+day = ""
+income = ""
+table_insurance = ""
+in_cost = ""
+in_quantity = ""
+again_operation = "y"
+customer_number = 1
+total_tax = 0
+total_insurance = 0
+while again_operation == "y":
+    # main menu
+    print(
+        "------------------------------------------------------------------------------------------------------------------")
+    print(f"                                             Main Menu , customer # {customer_number}")
+    print(
+        "------------------------------------------------------------------------------------------------------------------")
+
+    print("\n1-Rental Order")
+    print("2-Return Order")
+    print("3-Total Biling")
+# using while loop to check user input of main menu
+    order_type2 = input("\nEnter your Desire type :  ")
+    while not order_type2.isdigit():
+        print("\n1-Rental Order")
+        print("2-Return Order")
+        print("3-Total Biling")
+        order_type2 = input("\n                \u26A0 Please enter valid input :  ")
+        while order_type2 != "1" and order_type2 != "2" and order_type2 != "3":
+            print("\n1-Rental Order")
+            print("2-Return Order")
+            print("3-Total Biling")
+            order_type2 = input("\n                \u26A0 Please enter valid input :  ")
+    order_type = int(order_type2)
+
+
+# logic if user enter 1
+    if order_type == 1:
+        print(
+            "\n\n------------------------------------------------------------------------------------------------------------------\n"
+            "                                            Rental Order\n"
+            "------------------------------------------------------------------------------------------------------------------\n"
+            "Car Type      Rental Cost      Liability Insurance Cost      Comprehensive Insurance Cost           Quantity\n"
+            f"1-Cultus         $25                       $5                              $10                          {quantity_car_1}   \n"
+            f"2-Sportage       $40                       $10                             $15                          {quantity_car_2}  \n"
+            f"3-Audi           $65                       $20                             $25                          {quantity_car_3}  \n"
+            "------------------------------------------------------------------------------------------------------------------"
+        )
+# taking input
+        Select_car2 = input("\nPlease select car type : ")
+        insurance2 = input("press L for liability insurance or F for comprehensive insurance : ")
+        quantity2 = input("enter quantity you need : ")
+        days_order2 = input("For how many days you want to use this Car : ")
+# logic
+        if days_order2 =="" and quantity2 == "" and insurance2 == "" and  Select_car2 == "" :
+            print("                \u26A0 Empty Input Error")
+
+        elif days_order2 =="" or quantity2 == "" or insurance2 == "" or  Select_car2 == "" :
+            print("                \u26A0 Empty Input Error")
+
+        elif not Select_car2.isdigit():
+            print("                \u26A0 Invalid Input Error: car must be a number.")
+
+        elif not quantity2.isdigit():
+            print("                \u26A0 Invalid Input Error: Quantity must be a number.")
+
+        elif insurance2.isdigit():
+            print("                \u26A0 Invalid Input Error: Insurance must be in Alphabet.")
+
+        elif not days_order2.isdigit():
+            print("                \u26A0 Invalid Input Error: Days must be a number.")
+
+        else:
+            Select_car = int(Select_car2)
+            insurance = insurance2
+            quantity = int(quantity2)
+            days_order = int(days_order2)
+            if Select_car == 1:
+                if quantity <= quantity_car_1:
+                    tax1 = 0.05 * 25 * quantity * days_order
+                    if insurance == "L" or insurance == "l":
+                        print(
+                            f"---Car Type : Cultus\n---Rental Cost : $25\n---Liability insurance cost : $5\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 25 * quantity * days_order + tax1 + 5
+                        print(f"                Total Cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        # updating variables
+                        quantity_car_1 -= quantity
+                        car += "\nCultus"
+                        tax += f"\n{tax1}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(25)}")
+                        table_insurance += (f"\n{str(5) }")
+                        total_cost += y
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 5
+                        total_tax += tax1
+
+                    elif insurance == "f" or insurance == "F":
+                        print(
+                            f"---Car Type : Cultus\n---Rental Cost : $25\n---Comprehensive insurance cost : $10\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 25 * quantity * days_order + tax1 + 10
+                        print(f"                Total Cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        quantity_car_1 -= quantity
+                        car += "\nCultus"
+                        tax += f"\n{tax1}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(25)}")
+                        table_insurance += (f"\n{str(10)}")
+                        total_cost += y
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 10
+                        total_tax += tax1
+                    else:
+                        print("                \u26A0 invalid insurance")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                else:
+                    print("                \u26A0 sorry! we have lesser quantity.")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------")
+            elif Select_car == 2:
+                if quantity <= quantity_car_2:
+                    tax2=0.05*40 * quantity * days_order
+                    if insurance == "L" or insurance == "l":
+                        print(
+                            f"---Car Type : Sportage\n---Rental Cost : $40\n---Liability insurance cost : $10\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 40 * quantity * days_order + tax2 + 10
+                        print(f"                Total cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        # updating variables
+                        total_cost += y
+                        quantity_car_2 -= quantity
+                        car += "\nSportage"
+                        tax += f"\n{tax2}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(40)}")
+                        table_insurance += (f"\n{str(10)}")
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 10
+                        total_tax += tax2
+
+                    elif insurance == "f" or insurance == "F":
+                        print(
+                            f"---Car Type : Sportage\n---Rental Cost : $40\n---Comprehensive insurance cost : $15\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 40 * quantity * days_order + tax2 + 15
+                        print(f"                Total cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        # updating variables
+                        total_cost += y
+                        quantity_car_2 -= quantity
+                        car += "\nSportage"
+                        tax += f"\n{tax2}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(40)}")
+                        table_insurance += (f"\n{str(15)}")
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 15
+                        total_tax += tax2
+
+                    else:
+                        print("                \u26A0 invalid insurance")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                else:
+                    print("                \u26A0 sorry! we have lesser quantity.")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------")
+            elif Select_car == 3:
+                if quantity <= quantity_car_3:
+                    tax3=0.05*65 * quantity * days_order
+                    if insurance == "L" or insurance == "l":
+                        print(
+                            f"---Car Type : Audii\n---Rental Cost : $65\n---Liability insurance cost : $20\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 65 * quantity * days_order + tax3 + 20
+                        print(f"                Total cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        # updating variables
+                        total_cost += y
+                        quantity_car_3 -= quantity
+                        car += "\nAudii"
+                        tax += f"\n{tax3}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(65)}")
+                        table_insurance += (f"\n{str(20)}")
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 20
+                        total_tax += tax3
+
+                    elif insurance == "f" or insurance == "F":
+                        print(
+                            f"---Car Type : Audii\n---Rental Cost : $65\n---Comprehensive insurance cost : $25\n---Quantity : {quantity}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        y = 65 * quantity * days_order + tax3 + 25
+                        print(f"                Total cost : ${y}")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                        # updating variables
+                        total_cost += y
+                        quantity_car_3 -= quantity
+                        car += "\nAudii"
+                        tax += f"\n{tax3}"
+                        day += (f"\n{str(days_order)}")
+                        income += (f"\n{str(65)}")
+                        table_insurance += (f"\n{str(25)}")
+                        in_cost += f"\n{y}"
+                        in_quantity += f"\n{quantity}"
+                        total_insurance += 25
+                        total_tax += tax3
+
+                    else:
+                        print("                \u26A0 invalid insurance")
+                        print(
+                            "------------------------------------------------------------------------------------------------------------------")
+                else:
+                    print("                \u26A0 sorry! we have lesser quantity.")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------")
+
+            else :
+                 print("                \u26A0 Invalid car")
+                 print(
+            "------------------------------------------------------------------------------------------------------------------")
+    # logic if user enter 2
+    elif order_type == 2:
+
+        print(
+            "\n\n------------------------------------------------------------------------------------------------------------------")
+        print("                                                 Return Order")
+        print(
+            "------------------------------------------------------------------------------------------------------------------")
+        print("\n1 - Cultus\n2 - sportage\n3 - Audii")
+        returning_car1 = input("\nWhat type of car u want to return : ")
+        quantity1 = input("enter quantity : ")
+        if quantity1 == "" or returning_car1 == "":
+            print("                \u26A0 Empty Entry Error")
+        elif quantity1 == "" and returning_car1 == "":
+            print("                \u26A0 Empty Entry Error")
+        elif not returning_car1.isdigit():
+            print("                \u26A0 Invalid Input Error: car must be a number.")
+
+        elif not quantity1.isdigit():
+            print("                \u26A0 Invalid Input Error: Quantity must be a number.")
+
+
+        else:
+            returning_car =int(returning_car1)
+            quantity = int(quantity1)
+            if returning_car == 1:
+
+
+                if (quantity + quantity_car_1) <= 10:
+                    quantity_car_1 += quantity
+                    print(
+                        "\n\n------------------------------------------------------------------------------------------------------------------")
+                    print(
+                        "                                               New Order")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------\n"
+
+                        "Car Type      Rental Cost      Liability Insurance Cost      Comprehensive Insurance Cost           Quantity\n"
+                        f"1-Cultus         $25                       $5                              $10                          {quantity_car_1}   \n"
+                        f"2-Sportage       $40                       $10                             $15                          {quantity_car_2}  \n"
+                        f"3-Audi           $65                       $20                             $25                          {quantity_car_3}  \n"
+                        "------------------------------------------------------------------------------------------------------------------"
+                    )
+
+                else:
+                    print(f"                \u26A0 {(quantity + quantity_car_1) - 10} quantity of this car hasn't been rented from our company.")
+            elif returning_car == 2:
+                if (quantity + quantity_car_2) <= 7:
+                    quantity_car_2 += quantity
+                    print(
+                        "\n\n------------------------------------------------------------------------------------------------------------------")
+                    print(
+                        "                                               New Order")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------\n"
+                        "Car Type      Rental Cost      Liability Insurance Cost      Comprehensive Insurance Cost           Quantity\n"
+                        f"1-Cultus         $25                       $5                              $10                          {quantity_car_1}   \n"
+                        f"2-Sportage       $40                       $10                             $15                          {quantity_car_2}  \n"
+                        f"3-Audi           $65                       $20                             $25                          {quantity_car_3}  \n"
+                        "------------------------------------------------------------------------------------------------------------------"
+                    )
+                else:
+                    print(f"                \u26A0 {(quantity + quantity_car_2) - 7} quantity of this car hasn't been rented from our company.")
+            elif returning_car == 3:
+                if (quantity + quantity_car_3) <= 5:
+                    quantity_car_3 += quantity
+                    print(
+                        "\n\n------------------------------------------------------------------------------------------------------------------")
+                    print(
+                        "                                               New Order")
+                    print(
+                        "------------------------------------------------------------------------------------------------------------------\n"
+                        "Car Type      Rental Cost      Liability Insurance Cost      Comprehensive Insurance Cost           Quantity\n"
+                        f"1-Cultus         $25                       $5                               $10                         {quantity_car_1}   \n"
+                        f"2-Sportage       $40                       $10                              $15                         {quantity_car_2}  \n"
+                        f"3-Audi           $65                       $20                              $25                         {quantity_car_3}  \n"
+                        "------------------------------------------------------------------------------------------------------------------"
+                    )
+                else:
+                    print(f"                \u26A0 {(quantity + quantity_car_3) - 5} quantity of this car hasn't been rented from our company.")
+            else:
+                print("                \u26A0 Invalid Car")
+                print(
+                    "------------------------------------------------------------------------------------------------------------------")
+
+
+    # logic if user enter 3
+    elif order_type == 3:
+        print("\nCar           $tax      $rent    Day   $insurance    Quantity    $Cost")
+        print("\n--------------------------------------------------------------------------")
+# we use split method for converting into list
+        cars = car.split('\n')
+        taxes = tax.split('\n')
+        incomes = income.split('\n')
+        days = day.split('\n')
+        insurances = table_insurance.split("\n")
+        ind_cost = in_cost.split("\n")
+        ind_quantity = in_quantity.split("\n")
+
+        for car_item, tax_item, income_item, day_item, insurance_item,ind_quantity_item,ind_cost_item in zip(cars, taxes, incomes, days, insurances,ind_quantity,ind_cost):
+            if len(car_item)==8:
+               print(f"{car_item}       {tax_item}       {income_item}      {day_item}      {insurance_item}            {ind_quantity_item}         {ind_cost_item}")
+               print("--------------------------------------------------------------------------")
+            elif len(car_item)==5 :
+                new_car = car_item + "   "
+                print(f"{new_car}       {tax_item}       {income_item}      {day_item}      {insurance_item}            {ind_quantity_item}         {ind_cost_item}")
+                print("--------------------------------------------------------------------------")
+            elif len(car_item)==6 :
+                new_car = car_item + "  "
+                print(f"{new_car}       {tax_item}       {income_item}      {day_item}      {insurance_item}            {ind_quantity_item}         {ind_cost_item}")
+                print("--------------------------------------------------------------------------")
+
+        print(f"Total Cost : ${total_cost}"
+              f"\nTotal insurance : ${total_insurance}"
+              f"\nTotal tax : ${total_tax}")
+        print("--------------------------------------------------------------------------")
+
+    customer_number += 1
+    again_operation = input("\nif you want to process please press \"y\" Otherwise press \"Any Key\" : ")
+    if again_operation == "y" or again_operation == "Y":
+        again_operation = "y"
+    else :
+        print(f"Thanks for using this program !\U00002764\U0000FE0F")
+        break
